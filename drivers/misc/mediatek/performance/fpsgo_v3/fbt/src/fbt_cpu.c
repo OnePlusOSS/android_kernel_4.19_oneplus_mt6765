@@ -2010,6 +2010,39 @@ SKIP:
 	return loading;
 }
 
+static void fbt_reset_boost(struct render_info *thr)
+{
+	struct fbt_boost_info *boost = NULL;
+
+	if (!thr)
+		return;
+
+	mutex_lock(&blc_mlock);
+	if (thr->p_blc)
+		thr->p_blc->blc = 0;
+	mutex_unlock(&blc_mlock);
+
+	boost = &(thr->boost_info);
+
+	boost->last_blc = 0;
+	boost->target_time = 0;
+	boost->target_fps = -1;
+
+	memset(boost->frame_info, 0, WINDOW * sizeof(struct fbt_frame_info));
+	boost->f_iter = 0;
+	boost->floor_count = 0;
+	boost->floor = 0;
+	boost->reset_floor_bound = 0;
+
+	mutex_lock(&fbt_mlock);
+	if (!boost_ta)
+		fbt_set_min_cap_locked(thr, 0, 1, 0);
+	fbt_check_max_blc_locked();
+	mutex_unlock(&fbt_mlock);
+
+	fpsgo_systrace_c_fbt(thr->pid, thr->buffer_id, 0, "perf idx");
+}
+
 static void fbt_frame_start(struct render_info *thr, unsigned long long ts)
 {
 	struct fbt_boost_info *boost;
@@ -2040,6 +2073,13 @@ static void fbt_frame_start(struct render_info *thr, unsigned long long ts)
 	fpsgo_systrace_c_fbt_gm(thr->pid, thr->buffer_id,
 		loading, "compute_loading");
 
+	/* unreliable targetfps */
+	if (targetfps == -1) {
+		fbt_reset_boost(thr);
+		runtime = -1;
+		goto EXIT;
+	}
+
 	blc_wt = fbt_boost_policy(runtime,
 			targettime, targetfps,
 			thr, ts, loading);
@@ -2049,6 +2089,7 @@ static void fbt_frame_start(struct render_info *thr, unsigned long long ts)
 	fpsgo_systrace_c_fbt(thr->pid, thr->buffer_id,
 		limited_cap, "limited_cap");
 
+EXIT:
 	fpsgo_fbt2fstb_update_cpu_frame_info(thr->pid, thr->buffer_id,
 		thr->tgid, thr->frame_type,
 		thr->Q2Q_time, runtime,

@@ -527,6 +527,7 @@ static void do_host_work(struct work_struct *data)
 	kfree(work);
 }
 
+#ifdef CONFIG_OPLUS_CHARGER_MTK6765R
 static irqreturn_t mt_usb_ext_iddig_int(int irq, void *dev_id)
 {
 	iddig_cnt++;
@@ -542,6 +543,7 @@ static irqreturn_t mt_usb_ext_iddig_int(int irq, void *dev_id)
 	disable_irq_nosync(iddig_eint_num);
 	return IRQ_HANDLED;
 }
+#endif
 
 static const struct of_device_id otg_iddig_of_match[] = {
 	{.compatible = "mediatek,usb_iddig_bi_eint"},
@@ -550,7 +552,9 @@ static const struct of_device_id otg_iddig_of_match[] = {
 
 static int otg_iddig_probe(struct platform_device *pdev)
 {
+#ifdef CONFIG_OPLUS_CHARGER_MTK6765R
 	int ret;
+#endif
 	struct device *dev = &pdev->dev;
 	struct device_node *node = dev->of_node;
 
@@ -559,6 +563,8 @@ static int otg_iddig_probe(struct platform_device *pdev)
 	if (iddig_eint_num < 0)
 		return -ENODEV;
 
+#ifdef CONFIG_OPLUS_CHARGER_MTK6765R
+	DBG(0, "Enabling IDDIG irq");
 	ret = request_irq(iddig_eint_num, mt_usb_ext_iddig_int,
 					IRQF_TRIGGER_LOW, "USB_IDDIG", NULL);
 	if (ret) {
@@ -567,6 +573,10 @@ static int otg_iddig_probe(struct platform_device *pdev)
 			iddig_eint_num, ret);
 		return ret;
 	}
+#else
+	DBG(0, "disabling IDDIG irq");
+	disable_irq(iddig_eint_num);
+#endif
 
 	return 0;
 }

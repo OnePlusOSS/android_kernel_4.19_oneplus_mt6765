@@ -4348,10 +4348,11 @@ int dpmaif_stop(unsigned char hif_id)
 	/* 3. todo: reset IP */
 	dpmaif_hw_reset(dpmaif_ctrl->md_id);
 #else
-	/* 3. todo: reset IP */
-	dpmaif_hw_reset(dpmaif_ctrl->md_id);
+	/* 2022.06.29 xuepeng@ims bug:3516370 modem minidump case:ALPS07178138 */
 	/* CG set */
 	ccci_hif_dpmaif_set_clk(0);
+	/* 3. todo: reset IP */
+	dpmaif_hw_reset(dpmaif_ctrl->md_id);
 #endif
 
 #ifdef DPMAIF_DEBUG_LOG

@@ -23,6 +23,15 @@
 #define RT4505_DTNAME_I2C "mediatek,strobe_main"
 #define RT5081_DTNAME     "mediatek,flashlights_rt5081"
 #define SYWT78_DTNAME     "mediatek,flashlights_sywt78"
+#ifdef OPLUS_FEATURE_CAMERA_COMMON
+#define ZHAOYUN_DTNAME    "mediatek,flashlights_zhaoyun"
+#define PARKERA_DTNAME    "mediatek,flashlights_parkera"
+#define PARKERB_DTNAME    "mediatek,flashlights_parkerb"
+#define ZHAOYUN_DTNAME_I2C "mediatek,strobe_main"
+#define PARKERA_DTNAME_I2C "mediatek,strobe_main"
+#define PARKERB_DTNAME_I2C "mediatek,strobe_main"
+#endif //OPLUS_FEATURE_CAMERA_COMMON
+
 
 #define AW3644_DTNAME_I2C "mediatek,strobe_main"
 #define AW3644_DTNAME     "mediatek,flashlights_aw3644"

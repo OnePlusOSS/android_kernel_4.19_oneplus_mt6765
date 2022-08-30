@@ -47,6 +47,10 @@ mainaf-y  += common/dw9814af/DW9814AF.o
 mainaf-y  += common/dw9718af/DW9718AF.o
 mainaf-y  += common/dw9718saf/DW9718SAF.o
 mainaf-y  += common/dw9718taf/DW9718TAF.o
+mainaf-y  += common/dw9718taf_parkera_ov13b10/DW9718TAF_PARKERA_OV13B10.o
+mainaf-y  += common/dw9718taf_parkera_ov13b2a/DW9718TAF_PARKERA_OV13B2A.o
+mainaf-y  += common/dw9718taf_parkera_s5kjn103/DW9718TAF_PARKERA_S5KJN103.o
+mainaf-y  += common/dw9718taf_parkerb_s5kjn103/DW9718TAF_PARKERB_S5KJN103.o
 mainaf-y  += common/dw9719taf/DW9719TAF.o
 mainaf-y  += common/dw9763af/DW9763AF.o
 mainaf-y  += common/dw9839af/DW9839AF.o
@@ -72,4 +76,10 @@ mainaf-y  += common/bu63169af/OIS_func.o
 mainaf-y  += common/bu63169af/OIS_main.o
 mainaf-y  += common/bu63169af/OIS_user.o
 mainaf-y  += common/bu64253gwzaf/BU64253GWZAF.o
-
+#ifdef OPLUS_FEATURE_CAMERA_COMMON
+mainaf-y  += common/fp5516af/FP5516AF.o
+mainaf-y  += common/bu64253af/BU64253AF.o
+#endif
+#ifdef OPLUS_FEATURE_CAMERA_COMMON
+mainaf-y  += common/dw9718taf_zhaoyun/DW9718TAF_ZHAOYUN.o
+#endif
